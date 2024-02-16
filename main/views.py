@@ -1,14 +1,19 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.template.defaulttags import lorem
+
+from goods.models import Category
 
 
 def index(request):
+
+    category = Category.objects.all()
+
     context = {
         "title": "Home - Главная",
         "content": "Магазин мебели HOME",
+        "categories": category,
     }
-    
+
     return render(request, "main/index.html", context)
 
 
