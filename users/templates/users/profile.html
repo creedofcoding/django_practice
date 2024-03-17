@@ -3,6 +3,7 @@
 {% load carts_tags %}
 
 {% block content %}
+<script src="{% static "deps/js/jquery/jquery-3.7.0.min.js" %}"></script>
 <div class="row">
     <div class="container mt-5">
         <div class="row">
@@ -114,7 +115,7 @@
                                 </h2>
                                 <div id="collapse{{ order.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ order.id }}" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <table class="table table-dark table-hover">
+                                        <table id="order_table" class="table table-dark table-hover">
                                             <thead>
                                                 <tr>
                                                     <th>Товар</th>
@@ -128,16 +129,28 @@
                                                 <tr>
                                                     <td><a class="text-white" href="{% url 'goods:product' item.product.slug %}">{{ item.product.name }}</a></td>
                                                     <td>{{ item.quantity }}</td>
-                                                    <td>{{ item.price }}</td>
-                                                    <td>{{ item.products_price }}</td>
+                                                    <td>{{ item.price }}$</td>
+                                                    <td class="products_price{{ order.id }}">{{ item.products_price }}$</td>
                                                 </tr>
                                                 {% endfor %}
                                             </tbody>
                                         </table>
-                                        {% comment %} <div class="d-flex justify-content-between">
+                                        <div class="d-flex justify-content-between">
                                             <p><strong>Итого:</strong></p>
-                                            <p><strong>{{ order.total_price }}</strong></p>
-                                        </div> {% endcomment %}
+                                            <p><strong id="total_price{{ order.id }}"></strong></p>
+                                        </div>
+                                        <script>
+                                            var total_price = 0;
+                                            var product_price;
+                                            var total_prices = [];
+            
+                                            $(".products_price{{ order.id }}").each(function(){
+                                                product_price = parseFloat($(this).html().replace(/,/, '.'));
+                                                total_price += product_price;
+                                            });
+
+                                            $("#total_price{{ order.id }}").text(total_price.toFixed(2) + "$");
+                                        </script>
                                     </div>
                                 </div>
                             </div>
